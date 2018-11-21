@@ -36,7 +36,8 @@ use syn::{Ident, PathSegment};
 
 lazy_static! {
     static ref CONFIG: Ini = {
-        let conf = Ini::load_from_file("conf.ini").unwrap();
+        let dir = env!("CARGO_MANIFEST_DIR");
+        let conf = Ini::load_from_file(format!("{0}/{1}", dir, "conf.ini")).unwrap();
         conf
     };
     static ref PRAZI_DIR: String = {
