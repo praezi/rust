@@ -1,10 +1,10 @@
 CFG_FILE=conf.ini
 read_storage_config=($(awk -F '=' -v input="storage" '$1 ~ input{flag=1; next} $1 ~ /\[object/{flag=0; next} flag && NF {split($0,arr,"="); print arr[2] }' $CFG_FILE ))
-PRAZI_DIR="${read_storage_config[0]}/crates/reg"
-UFI_DIR="${read_storage_config[0]}/cdn/graphs"
-BASH_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-PYSRC_DIR="$BASH_DIR/py-src"
-UFI_BIN="$BASH_DIR/target/release/ufi"
+export PRAZI_DIR="${read_storage_config[0]}/crates/reg"
+export UFI_DIR="${read_storage_config[0]}/cdn/graphs"
+export BASH_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+export PYSRC_DIR="$BASH_DIR/py-src"
+export UFI_BIN="$BASH_DIR/target/release/ufi"
 
 cargo build --bin ufi --release
 mkdir -p $UFI_DIR
