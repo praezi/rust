@@ -13,8 +13,6 @@ matrix:
   allow_failures:
     - rust: nightly
   include:
-    - rust: nightly-2018-01-12
-      before_script:
-        - rustup component add rustfmt-preview
+    - rustup component add rustfmt-preview
       script:
-        - cargo fmt -- --write-mode=diff
+        - cargo fmt --all -- --check
