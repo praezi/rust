@@ -8,7 +8,6 @@ rust:
 script: |
   cargo build --bin ufi --verbose &&
   cargo build --bin launch --verbose
-
   
 matrix:
   allow_failures:
