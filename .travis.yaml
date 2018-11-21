@@ -1,0 +1,21 @@
+sudo: false
+language: rust
+
+rust:
+  - stable
+  - nightly
+
+script: |
+  cargo build --bin ufi --verbose &&
+  cargo build --bin launch --verbose
+
+  
+matrix:
+  allow_failures:
+    - rust: nightly
+  include:
+    - rust: nightly-2018-01-12
+      before_script:
+        - rustup component add rustfmt-preview
+      script:
+        - cargo fmt -- --write-mode=diff
