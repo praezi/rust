@@ -1,3 +1,4 @@
+# coding=utf-8
 #!/usr/bin/env python
 # Reads-in an LLVM opt-generated, Präzi-annotated "dot file" and outputs it such that it can easily be merged
 #

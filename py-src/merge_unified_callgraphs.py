@@ -1,3 +1,4 @@
+# coding=utf-8
 #!/usr/bin/env python
 # Reads-in a non-merged call graph file in Präzi syntax and outputs a merged call graph, with statistical information
 # annotated

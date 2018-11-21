@@ -1,3 +1,4 @@
+# coding=utf-8
 #!/usr/bin/env python
 # Reads-in a merged call graph and outputs a merged dependency graph
 #
