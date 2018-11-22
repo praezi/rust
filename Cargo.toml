@@ -3,9 +3,10 @@ name = "rustprazi"
 version = "0.1.0"
 authors = ["Joseph Hejderup <joseph.hejderup@gmail.com>", "Mortiz Beller <moritzbeller@gmx.de>", "Georgios Gousios <gousiosg@gmail.com>"]
 
+
 [[bin]]
-name = "launch"
-path = "src/bin/process_registry.rs"
+name = "rustprazi"
+path = "src/bin/prazi.rs"
 
 [[bin]]
 name = "ufi"
@@ -13,6 +14,7 @@ path = "src/bin/ufi.rs"
 
 [dependencies]
 cargo = "0.31.0"
+clap = "2.32.0"
 crates-index = "0.12.0"
 filebuffer = "0.4.0"
 flate2 = "1.0.4"

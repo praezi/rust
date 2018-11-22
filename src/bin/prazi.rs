@@ -3,6 +3,7 @@
 // (c) 2018 - onwards Joseph Hejderup <joseph.hejderup@gmail.com>
 //
 // MIT/APACHE licensed -- check LICENSE files in top dir
+extern crate clap;
 extern crate crates_index;
 extern crate flate2;
 extern crate futures;
@@ -16,6 +17,7 @@ extern crate glob;
 extern crate ini;
 extern crate rayon;
 
+use clap::{App, Arg, SubCommand};
 use crates_index::Index;
 use flate2::read::GzDecoder;
 use futures::{stream, Future, Stream};
@@ -231,12 +233,14 @@ impl Registry {
         let mut rustup_args = vec!["run"];
         let version = if nightly {
             rustup_args.push("nightly");
+            println!("running nightly compiler");
             CONFIG
                 .section(Some("compiler"))
                 .unwrap()
                 .get("nightly")
                 .unwrap()
         } else {
+            println!("running stable compiler");
             CONFIG
                 .section(Some("compiler"))
                 .unwrap()
@@ -290,12 +294,62 @@ impl Registry {
 
 fn main() {
     let mut reg = Registry { list: Vec::new() };
-    reg.read();
-    println!("Done with the index!");
-    // reg.download_src().unwrap();
-    println!("Done with downloading!");
-    // reg.validate_manifests();
-    //reg.rewrite_manifests();
-    // reg.compile(false);
-    reg.build_callgraph();
+
+    let matches = App::new("rustprazi")
+        .version("0.1.0")
+        .about("präzi written in Rust")
+        .arg(Arg::with_name("update").long("update").help("Update index"))
+        .subcommand(SubCommand::with_name("download").about("download registry crate sources"))
+        .subcommand(SubCommand::with_name("validate").about("validate Cargo.toml files"))
+        .subcommand(
+            SubCommand::with_name("rewrite")
+                .about("rewrite Cargo.toml to remove local Path dependencies"),
+        ).subcommand(
+            SubCommand::with_name("build-callgraphs")
+                .about("construct Crate-wide LLVM callgraphss"),
+        ).subcommand(
+            SubCommand::with_name("build-crates")
+                .about("build all crates")
+                .arg(
+                    Arg::with_name("nightly")
+                        .long("nightly")
+                        .short("n")
+                        .help("run nightly compiler"),
+                ),
+        ).get_matches();
+
+    if matches.is_present("update") {
+        reg.update();
+        println!("Done with updating!");
+    }
+
+    if let Some(matches) = matches.subcommand_matches("download") {
+        reg.read();
+        reg.download_src().unwrap();
+        println!("Done with downloading!");
+    }
+
+    if let Some(matches) = matches.subcommand_matches("validate") {
+        reg.read();
+        reg.validate_manifests();
+    }
+
+    if let Some(matches) = matches.subcommand_matches("rewrite") {
+        reg.read();
+        reg.rewrite_manifests();
+    }
+
+    if let Some(matches) = matches.subcommand_matches("build-callgraphs") {
+        reg.read();
+        reg.build_callgraph();
+    }
+
+    if let Some(matches) = matches.subcommand_matches("build-crates") {
+        reg.read();
+        if matches.is_present("nightly") {
+            reg.compile(true);
+        } else {
+            reg.compile(false);
+        }
+    }
 }
