@@ -297,7 +297,7 @@ fn main() {
 
     let matches = App::new("rustprazi")
         .version("0.1.0")
-        .about("präzi written in Rust")
+        .about("Rustpräzi: generate call-based dependency networks of crates.io registry")
         .arg(Arg::with_name("update").long("update").help("Update index"))
         .subcommand(SubCommand::with_name("download").about("download registry crate sources"))
         .subcommand(SubCommand::with_name("validate").about("validate Cargo.toml files"))
