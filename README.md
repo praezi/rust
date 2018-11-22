@@ -6,7 +6,7 @@ Constructing call-based dependency networks of [crates.io](https://crates.io) as
 
 >[Hejderup J, Beller M, Gousios G. Präzi: From Package-based to Precise Call-based Dependency Network Analyses. 2018.](https://pure.tudelft.nl/portal/files/46926997/main2.pdf)
 
-# Some warnings
+## Some warnings
 
 :warning: **DO NOT RUN IN AN UNSANDBOXED ENVIRONMENT** :warning:  
 
@@ -14,9 +14,9 @@ Constructing call-based dependency networks of [crates.io](https://crates.io) as
 Building entire crates.io (80k+ releases) requires muscle powers (cluster)
 NB: building small subsets of crates.io is fully doable on a local machine 
 
-# Getting started
+## Getting started
 
-## Installation Prerequisites
+### Installation Prerequisites
 
 - The Rust toolchain with `rustup` (download at the [offical website](https://www.rust-lang.org/en-US/install.html))
 - Python 2.7 or 3.7
@@ -24,7 +24,7 @@ NB: building small subsets of crates.io is fully doable on a local machine
 - Recommended OS: Ubuntu 16.04.3 LTS
 
 
-## 1. Create a `conf.ini` file at the root of the project with the following content
+### 1. Create a `conf.ini` file at the root of the project with the following content
 
 ```ini
 encoding=utf-8
@@ -46,7 +46,7 @@ Since the bitcode generation changed in newer versions of Rust, we advise to sti
 
 
 
-## 2. Constructing call graphs of crates
+### 2. Constructing call graphs of crates
 
 1. Compile the tool
 
@@ -76,7 +76,7 @@ cargo build --bin prazi --release
 ./target/release/prazi build-callgraphs
 ```
 
-## 2. Construct RustPräzi
+### 2. Construct RustPräzi
 
 1. Install `rustfilt` for demangling of Rust symbols
 
@@ -92,7 +92,7 @@ Two graphs are generated:
 - `../cdn/graphs/callgraph.ufi.merged.graph` -- the call-based dependency network (CDN)
 - `../cdn/graphs/crate.dependency.callgraph.graph` -- the packaged-based dependency network derived from the CDN
 
-## 3. Graph analysis with RustPräzi
+### 3. Graph analysis with RustPräzi
 TODO
 
 # License
