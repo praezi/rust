@@ -6,22 +6,19 @@ Constructing call-based dependency networks of [crates.io](https://crates.io) as
 
 >[Hejderup J, Beller M, Gousios G. Präzi: From Package-based to Precise Call-based Dependency Network Analyses. 2018.](https://pure.tudelft.nl/portal/files/46926997/main2.pdf)
 
-## Some warnings
-
-:warning: **DO NOT RUN IN AN UNSANDBOXED ENVIRONMENT** :warning:  
-
-:warning: **DO NOT BUILD USING A PERSONAL MACHINE** :warning:  
-Building entire crates.io (80k+ releases) requires muscle powers (cluster)
-NB: building small subsets of crates.io is fully doable on a local machine 
-
 ## Getting started
 
 ### Installation Prerequisites
 
 - The Rust toolchain with `rustup` (download at the [offical website](https://www.rust-lang.org/en-US/install.html))
 - Python 2.7 or 3.7
+- GNU Parallel
 - A pre-built binary of LLVM 4.0 (download at [official website](http://releases.llvm.org/download.html#4.0.0)). In the `config.ini` (root of the repository), specify the path to the uncompressed LLVM binary.
 - Recommended OS: Ubuntu 16.04.3 LTS
+
+### System Setup
+- :warning: Compiling crates in the wild can be dangerous, hence it is advised to run in a sandboxed environment
+- 💻 We recommend running it on a distributed system, compiling 80k+ crates is expense computation-wise
 
 
 ### 1. Create a `conf.ini` file at the root of the project with the following content
