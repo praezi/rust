@@ -18,7 +18,7 @@ Constructing call-based dependency networks of [crates.io](https://crates.io) as
 
 ### System Setup
 - :warning: Compiling crates in the wild can be dangerous, hence it is advised to run in a sandboxed environment
-- 💻 We recommend running it on a distributed system, compiling 80k+ crates is expense computation-wise
+- 💻 We recommend running it on a distributed system, compiling 80k+ crates is expensive computation-wise
 
 
 ### 1. Create a `conf.ini` file at the root of the project with the following content
