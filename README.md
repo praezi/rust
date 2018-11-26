@@ -1,6 +1,7 @@
 # RustPräzi
 
 [![Build Status](https://travis-ci.org/praezi/rust.svg?branch=master)](https://travis-ci.org/praezi/rust)
+[![LOC](https://tokei.rs/b1/github/praezi/rust)](https://github.com/praezi/rust)
 
 Constructing call-based dependency networks of [crates.io](https://crates.io) as conceptually described in 
 
