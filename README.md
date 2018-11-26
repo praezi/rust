@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/praezi/rust.svg?branch=master)](https://travis-ci.org/praezi/rust)
 [![LOC](https://tokei.rs/b1/github/praezi/rust)](https://github.com/praezi/rust)
+[![Join the chat at https://gitter.im/praezi/rust](https://badges.gitter.im/praezi/rust.svg)](https://gitter.im/praezi/rust?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Constructing call-based dependency networks of [crates.io](https://crates.io) as conceptually described in 
 
