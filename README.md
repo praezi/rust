@@ -108,7 +108,7 @@ import re
 
 regex = r"^(.*?) \[label:"
 
-def load_prazi(base_dir):
+def load_prazi(file):
     PRAZI = nx.DiGraph()
     with open(file) as f: #callgraph.ufi.merged.graph
         for line in f:
