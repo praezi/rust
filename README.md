@@ -93,7 +93,14 @@ Two graphs are generated:
 
 ### 3. Graph analysis with RustPräzi
 
-#### Loading Präzi with [NetworkX](https://networkx.github.io/)
+
+
+
+<details>
+
+<summary>
+Loading Präzi with <a href="https://networkx.github.io">NetworkX</a>
+</summary>
 
 ``` python
 import networkx as nx
@@ -137,9 +144,7 @@ def load_prazi_dep(file):
     return  PRAZI_DEP
 
 ```
-
-
-
+</details>
 
 # License
 
