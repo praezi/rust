@@ -25,8 +25,8 @@ With RustPräzi, we go from coarse-grained package-based dependency networks (su
 - Recommended OS: Ubuntu 16.04.3 LTS
 
 ### System Setup
-- :warning: Compiling crates in the wild can be dangerous, hence it is advised to run in a sandboxed environment
-- 💻 We recommend running it on a distributed system, compiling 80k+ crates is expensive computation-wise
+- :warning: Building crates can be dangerous as this includes running the tests. Hence, it is advised to run this in a sandboxed environment.
+- 💻 We recommend running it on a very powerful system. Compiling 80k+ crates is no easy feat.
 
 
 ### 1. Create a `conf.ini` file at the root of the project with the following content
