@@ -10,9 +10,21 @@ Constructing call-based dependency networks of [crates.io](https://crates.io) as
 
 ## TL;DR: What does RutPräzi do?
 
+### Description
+
 With RustPräzi, we go from coarse-grained package-based dependency networks (such as what GitHub uses for their [vulnerable package detection](https://help.github.com/articles/about-security-alerts-for-vulnerable-dependencies/)) to more fine-grained call-based dependency networks. These allow us to track, for example, whether a vulnerable function of a library is actually being used and whether a security warning really needs to be raised. This is much more precise than package-based dependency networks. In fact, RustPräzi makes such analyses a lot more precise (upto 3x).
 
 ![Package-based (PDN, above) versus Call-based Dependency Networks (CDN, below)](doc/pdn_cdn.png "Package-based (PDN, above) versus Call-based Dependency Networks (CDN, below)")
+
+### Use cases
+
+RustPräzi opens the door to many new or more precise analyses:
+
+* Fine-grained security vulnerability propagation checking
+* Precise license compliance checking 
+* Change impact and deprecation analysis ("Which clients break if I as a library maintainer remove this deprecated method?")
+* Health analyses of an entire ecosystem ("what are the most central functions?", "where should we focus our testing efforts?", ...)
+* ...
 
 ## Getting started
 
