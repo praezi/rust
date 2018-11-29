@@ -25,7 +25,7 @@ With RustPräzi, we go from coarse-grained package-based dependency networks (su
 - Recommended OS: Ubuntu 16.04.3 LTS
 
 ### System Setup
-- :warning: Building crates can be dangerous as this includes running the tests. Hence, it is advised to run this in a sandboxed environment.
+- :warning: Building crates can be dangerous as for some crates, this includes running the tests. Hence, it is advised to do it in a sandboxed environment.
 - 💻 We recommend running it on a very powerful system. Compiling 80k+ crates is no easy feat.
 
 
