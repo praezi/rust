@@ -24,7 +24,7 @@ RustPräzi opens the door to many new or more precise analyses:
 * Precise license compliance checking 
 * Change impact and deprecation analysis ("Which clients break if I as a library maintainer remove this deprecated method?")
 * Health analyses of an entire ecosystem ("what are the most central functions?", "where should we focus our testing efforts?", ...)
-* ...
+* ... and more!
 
 ## Getting started
 
