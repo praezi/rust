@@ -8,7 +8,7 @@ Constructing call-based dependency networks of [crates.io](https://crates.io) as
 
 >[Hejderup J, Beller M, Gousios G. Präzi: From Package-based to Precise Call-based Dependency Network Analyses. 2018.](https://pure.tudelft.nl/portal/files/46926997/main2.pdf)
 
-## TL;DR: What does RutPräzi do?
+## TL;DR: What does RustPräzi do?
 
 ### Description
 
@@ -23,7 +23,7 @@ RustPräzi opens the door to many new or more precise analyses:
 * Fine-grained security vulnerability propagation checking
 * Precise license compliance checking 
 * Change impact and deprecation analysis ("Which clients break if I as a library maintainer remove this deprecated method?")
-* Health analyses of an entire ecosystem ("what are the most central functions?", "where should we focus our testing efforts?", ...)
+* Health analyses of an entire ecosystem ("What are the most central functions?", "Where should we focus our testing efforts?", ...)
 * ... and more!
 
 ## Getting started
