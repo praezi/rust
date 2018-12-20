@@ -1,4 +1,4 @@
-# RustPräzi
+# RustPräzi [rʌstpʁɛˈt͡siːz]
 
 [![Build Status](https://travis-ci.org/praezi/rust.svg?branch=master)](https://travis-ci.org/praezi/rust)
 [![LOC](https://tokei.rs/b1/github/praezi/rust)](https://github.com/praezi/rust)
