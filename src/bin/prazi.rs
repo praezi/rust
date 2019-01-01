@@ -56,6 +56,19 @@ lazy_static! {
 pub struct PraziCrate {
     pub name: String,
     pub version: String,
+    pub targets: Option<Vec<Target>>,
+}
+
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone)]
+pub struct Target {
+    name: String,
+    ty: TargetType,
+}
+
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone)]
+enum TargetType {
+    BIN,
+    LIB,
 }
 
 impl PraziCrate {
@@ -117,6 +130,7 @@ impl Registry {
                 self.list.push(PraziCrate {
                     name: krate.name().to_string(),
                     version: version.version().to_string(),
+                    targets: None,
                 });
             }
         }
@@ -131,6 +145,7 @@ impl Registry {
                 self.list.push(PraziCrate {
                     name: krate.name().to_string(),
                     version: version.version().to_string(),
+                    targets: None,
                 });
             }
         }
