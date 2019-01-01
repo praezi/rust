@@ -28,6 +28,7 @@ use reqwest::r#async::{Client, Decoder};
 use serde_json::{Error, Value};
 use tar::Archive;
 
+use std::collections::HashMap;
 use std::fs;
 use std::fs::File;
 use std::path::Path;
@@ -149,6 +150,39 @@ impl Registry {
                 });
             }
         }
+    }
+
+    fn read_client_file(&mut self, filename: &str) {
+        let clients = fs::read_to_string(filename).expect("Something went wrong reading the file");
+
+        let mut targets: HashMap<String, Vec<&str>> = HashMap::new();
+        for client in clients.lines() {
+            let mut values = client.split("\t").collect::<Vec<&str>>();
+            let key = format!("{}\t{}", values[0], values[1]);
+
+            if targets.contains_key(&key) {
+                if let Some(lst) = targets.get_mut(&key) {
+                    lst.push(values[2]);
+                }
+            } else {
+                targets.insert(key, vec![values[2]]);
+            }
+        }
+
+        targets.iter().for_each(|(k, v)| {
+            let values = k.split("\t").collect::<Vec<&str>>();
+            self.list.push(PraziCrate {
+                name: values[0].to_string().replace("\"", ""),
+                version: values[1].to_string().replace("\"", ""),
+                targets: Some(
+                    v.iter()
+                        .map(|x| Target {
+                            name: x.to_string().replace("\"", ""),
+                            ty: TargetType::BIN,
+                        }).collect(),
+                ),
+            });
+        });
     }
 
     fn download_src(&self) -> Result<()> {
@@ -317,6 +351,14 @@ fn main() {
         .subcommand(SubCommand::with_name("download").about("download registry crate sources"))
         .subcommand(SubCommand::with_name("validate").about("validate Cargo.toml files"))
         .subcommand(
+            SubCommand::with_name("read-clients")
+                .arg(
+                    Arg::with_name("INPUT")
+                        .help("Sets the input file to use")
+                        .required(true)
+                        .index(1),
+                ).about("read client file"),
+        ).subcommand(
             SubCommand::with_name("rewrite")
                 .about("rewrite Cargo.toml to remove local Path dependencies"),
         ).subcommand(
@@ -366,5 +408,10 @@ fn main() {
         } else {
             reg.compile(false);
         }
+    }
+
+    if let Some(matches) = matches.subcommand_matches("read-clients") {
+        let filename = matches.value_of("INPUT").unwrap();
+        reg.read_client_file(filename);
     }
 }
