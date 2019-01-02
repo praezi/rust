@@ -304,7 +304,7 @@ impl Registry {
                     && !Path::new(&format!("{}/{}.bc", krate.dir(), bin_name)).exists()
                 {
                     let output = Command::new("rustup")
-                        .args(&["run", "1.23.0"])
+                        .args(&["run", "1.22.1"])
                         .args(&["cargo", "rustc", "--bin"])
                         .arg(bin_name)
                         .args(&["--", "--emit=llvm-bc"])
