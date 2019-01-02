@@ -192,22 +192,38 @@ impl Registry {
         let client = Client::new();
         let responses = stream::iter_ok(self.list.iter().cloned())
             .map(|krate| {
-                client
-                    .get(&krate.url_src())
-                    .send()
-                    .and_then(|mut res| {
-                        std::mem::replace(res.body_mut(), Decoder::empty()).concat2()
-                    }).map(move |body| {
-                        let mut archive = Archive::new(GzDecoder::new(body.as_ref()));
-                        let tar_dir = krate.dir_src();
-                        let dst_dir = krate.dir();
-                        archive.unpack(&tar_dir).unwrap();
-                        fs::rename(
-                            format!("/{0}/{1}-{2}", &tar_dir, krate.name, krate.version),
-                            &dst_dir,
-                        ).unwrap();
-                        println!("Untared: {:?}", &krate.url_src());
-                    })
+                if !Path::new(&krate.dir()).exists() {
+                    Some(
+                        client
+                            .get(&krate.url_src())
+                            .send()
+                            .and_then(|mut res| {
+                                std::mem::replace(res.body_mut(), Decoder::empty()).concat2()
+                            }).map(move |body| {
+                                let mut archive = Archive::new(GzDecoder::new(body.as_ref()));
+                                let tar_dir = krate.dir_src();
+                                let dst_dir = krate.dir();
+                                if let Err(error) = archive.unpack(&tar_dir) {
+                                    eprintln!("Error unpacking: {} {:?}", tar_dir, error);
+                                }
+                                if let Err(error) = fs::rename(
+                                    format!("/{0}/{1}-{2}", &tar_dir, krate.name, krate.version),
+                                    &dst_dir,
+                                ) {
+                                    eprintln!("Error renaming: {} {:?}", dst_dir, error);
+                                }
+                            }).then(
+                                |res: Result<(), reqwest::Error>| -> Result<(), reqwest::Error> {
+                                    if let Err(error) = res {
+                                        eprintln!("Error downloading: {:?}", error);
+                                    }
+                                    Ok(())
+                                },
+                            ),
+                    )
+                } else {
+                    None
+                }
             }).buffer_unordered(N);
         let work = responses.for_each(|_| Ok(()));
         core.run(work)?;
@@ -285,7 +301,7 @@ impl Registry {
             for target in &krate.targets.clone().unwrap() {
                 let bin_name = &target.name; //we skip type check (all are bins)
                 if Path::new(&krate.dir()).exists()
-                    && Path::new(&format!("{}/{}.bc", krate.dir(), bin_name)).exists()
+                    && !Path::new(&format!("{}/{}.bc", krate.dir(), bin_name)).exists()
                 {
                     let output = Command::new("rustup")
                         .args(&["run", "1.23.0"])
@@ -463,6 +479,6 @@ fn main() {
         let filename = matches.value_of("INPUT").unwrap();
         reg.read_client_file(filename);
         reg.compile_bins();
-        println!("Done with downloading!");
+        println!("Done with compiling!");
     }
 }
