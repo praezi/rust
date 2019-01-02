@@ -312,8 +312,8 @@ impl Registry {
                         .output()
                         .expect("failed to execute cargo build");
                     if output.status.success() {
-                        println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
-                        println!("build done: {}", krate.dir());
+                        // println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+                        println!("{}/{}-{}: success", krate.name, krate.version, bin_name);
                         fs::rename(
                             format!("{}/Cargo.lock", krate.dir()),
                             format!("{}/{}.lock", krate.dir(), bin_name),
@@ -322,22 +322,31 @@ impl Registry {
                             fs::rename(
                                 krate.bitcode_path(),
                                 format!("{}/{}.bc", krate.dir(), bin_name),
-                            ).expect("Unable to rename file");
+                            ).expect(&format!(
+                                "{}/{}-{}: unable to rename",
+                                krate.name, krate.version, bin_name
+                            ));
                         } else {
                             let timestamp = Utc::now();
                             fs::write(
                                 format!("{}/{}_nobitcode", krate.dir(), bin_name),
                                 format!("{}", timestamp.format("%Y-%m-%d %H:%M:%S")),
-                            ).expect("Unable to write file");
+                            ).expect(&format!(
+                                "{}/{}-{}: unable to write _nobitcode",
+                                krate.name, krate.version, bin_name
+                            ));
                         }
                     } else {
-                        eprintln!("build failed: {}", String::from_utf8_lossy(&output.stderr));
+                        eprintln!(
+                            "{}/{}-{}: failed :\n {}",
+                            krate.name,
+                            krate.version,
+                            bin_name,
+                            String::from_utf8_lossy(&output.stderr)
+                        );
                     }
                 } else {
-                    println!(
-                        " Crate {}/{}-{} already built!",
-                        krate.name, krate.version, bin_name
-                    );
+                    println!("{}/{}-{}: skip", krate.name, krate.version, bin_name);
                 }
             }
         });
