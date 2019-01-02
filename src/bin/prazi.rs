@@ -3,6 +3,7 @@
 // (c) 2018 - onwards Joseph Hejderup <joseph.hejderup@gmail.com>
 //
 // MIT/APACHE licensed -- check LICENSE files in top dir
+extern crate chrono;
 extern crate clap;
 extern crate crates_index;
 extern crate flate2;
@@ -17,6 +18,7 @@ extern crate glob;
 extern crate ini;
 extern crate rayon;
 
+use chrono::Utc;
 use clap::{App, Arg, SubCommand};
 use crates_index::Index;
 use flate2::read::GzDecoder;
@@ -113,9 +115,9 @@ pub(crate) struct Registry {
     pub list: Vec<PraziCrate>,
 }
 
-type Result<T> = std::result::Result<T, Box<std::error::Error>>;
+type PraziResult<T> = std::result::Result<T, Box<std::error::Error>>;
 
-const N: usize = 5;
+const N: usize = 10;
 
 impl Registry {
     fn read(&mut self) {
@@ -185,7 +187,7 @@ impl Registry {
         });
     }
 
-    fn download_src(&self) -> Result<()> {
+    fn download_src(&self) -> PraziResult<()> {
         let mut core = tokio_core::reactor::Core::new()?;
         let client = Client::new();
         let responses = stream::iter_ok(self.list.iter().cloned())
@@ -273,6 +275,53 @@ impl Registry {
                     }
                 } else {
                     println!("Package not publishable with the running Cargo version");
+                }
+            }
+        });
+    }
+
+    fn compile_bins(&self) {
+        self.list.par_iter().for_each(|krate| {
+            for target in &krate.targets.clone().unwrap() {
+                let bin_name = &target.name; //we skip type check (all are bins)
+                if Path::new(&krate.dir()).exists()
+                    && Path::new(&format!("{}/{}.bc", krate.dir(), bin_name)).exists()
+                {
+                    let output = Command::new("rustup")
+                        .args(&["run", "1.23.0"])
+                        .args(&["cargo", "rustc", "--bin"])
+                        .arg(bin_name)
+                        .args(&["--", "--emit=llvm-bc"])
+                        .current_dir(krate.dir())
+                        .output()
+                        .expect("failed to execute cargo build");
+                    if output.status.success() {
+                        println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+                        println!("build done: {}", krate.dir());
+                        fs::rename(
+                            format!("{}/Cargo.lock", krate.dir()),
+                            format!("{}/{}.lock", krate.dir(), bin_name),
+                        ).unwrap();
+                        if krate.has_bitcode() {
+                            fs::rename(
+                                krate.bitcode_path(),
+                                format!("{}/{}.bc", krate.dir(), bin_name),
+                            ).expect("Unable to rename file");
+                        } else {
+                            let timestamp = Utc::now();
+                            fs::write(
+                                format!("{}/{}_nobitcode", krate.dir(), bin_name),
+                                format!("{}", timestamp.format("%Y-%m-%d %H:%M:%S")),
+                            ).expect("Unable to write file");
+                        }
+                    } else {
+                        eprintln!("build failed: {}", String::from_utf8_lossy(&output.stderr));
+                    }
+                } else {
+                    println!(
+                        " Crate {}/{}-{} already built!",
+                        krate.name, krate.version, bin_name
+                    );
                 }
             }
         });
@@ -413,5 +462,7 @@ fn main() {
     if let Some(matches) = matches.subcommand_matches("read-clients") {
         let filename = matches.value_of("INPUT").unwrap();
         reg.read_client_file(filename);
+        reg.compile_bins();
+        println!("Done with downloading!");
     }
 }

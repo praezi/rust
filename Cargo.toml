@@ -32,3 +32,4 @@ serde_json = "1.0"
 syn = {git = "https://github.com/jhejderup/syn", features = ["parsing", "printing", "clone-impls", "full", "extra-traits", "visit", "visit-mut"]}
 tar = "0.4.20"
 tokio-core = "0.1.17"
+chrono = { version = "0.4", features = ["serde"] }
