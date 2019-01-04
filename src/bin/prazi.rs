@@ -321,7 +321,7 @@ impl Registry {
                         if krate.has_bitcode() {
                             fs::rename(
                                 krate.bitcode_path(),
-                                format!("{}/{}.bc", krate.dir(), bin_name),
+                                format!("{}/{}.bc.nightly", krate.dir(), bin_name),
                             ).expect(&format!(
                                 "{}/{}-{}: unable to rename",
                                 krate.name, krate.version, bin_name
