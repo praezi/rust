@@ -487,7 +487,7 @@ fn main() {
     if let Some(matches) = matches.subcommand_matches("read-clients") {
         let filename = matches.value_of("INPUT").unwrap();
         reg.read_client_file(filename);
-        reg.compile_bins();
+        reg.rewrite_manifests();
         println!("Done with compiling!");
     }
 }
