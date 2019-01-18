@@ -300,12 +300,16 @@ impl Registry {
         self.list.par_iter().for_each(|krate| {
             for target in &krate.targets.clone().unwrap() {
                 let bin_name = &target.name; //we skip type check (all are bins)
-                if Path::new(&krate.dir()).exists()
-                    && !(Path::new(&format!("{}/{}.bc", krate.dir(), bin_name)).exists() || Path::new(&format!("{}/{}.bc.nightly", krate.dir(), bin_name)).exists())
+                if Path::new(&krate.dir()).exists() && !(Path::new(&format!(
+                    "{}/{}.bc",
+                    krate.dir(),
+                    bin_name
+                )).exists()
+                    || Path::new(&format!("{}/{}.bc.nightly", krate.dir(), bin_name)).exists())
                 {
                     let output = Command::new("rustup")
                         .args(&["run", "1.22.1"])
-                      //  .args(&["run", "nightly-2017-12-06-x86_64-unknown-linux-gnu"])
+                        //  .args(&["run", "nightly-2017-12-06-x86_64-unknown-linux-gnu"])
                         .args(&["cargo", "rustc", "--bin"])
                         .arg(bin_name)
                         .args(&["--", "--emit=llvm-bc"])
@@ -488,7 +492,7 @@ fn main() {
     if let Some(matches) = matches.subcommand_matches("read-clients") {
         let filename = matches.value_of("INPUT").unwrap();
         reg.read_client_file(filename);
-      //  reg.rewrite_manifests();
+        //  reg.rewrite_manifests();
         reg.compile_bins();
         println!("Done with compiling!");
     }
