@@ -301,7 +301,7 @@ impl Registry {
             for target in &krate.targets.clone().unwrap() {
                 let bin_name = &target.name; //we skip type check (all are bins)
                 if Path::new(&krate.dir()).exists()
-                    && !Path::new(&format!("{}/{}.bc", krate.dir(), bin_name)).exists()
+                    && !(Path::new(&format!("{}/{}.bc", krate.dir(), bin_name)).exists() || Path::new(&format!("{}/{}.bc.nightly", krate.dir(), bin_name)).exists())
                 {
                     let output = Command::new("rustup")
                         .args(&["run", "1.22.1"])
@@ -322,7 +322,7 @@ impl Registry {
                         if krate.has_bitcode() {
                             fs::rename(
                                 krate.bitcode_path(),
-                                format!("{}/{}.bc.nightly", krate.dir(), bin_name),
+                                format!("{}/{}.bc.std_rewrite", krate.dir(), bin_name),
                             ).expect(&format!(
                                 "{}/{}-{}: unable to rename",
                                 krate.name, krate.version, bin_name
