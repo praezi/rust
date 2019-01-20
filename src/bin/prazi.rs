@@ -305,11 +305,12 @@ impl Registry {
                     krate.dir(),
                     bin_name
                 )).exists()
-                    || Path::new(&format!("{}/{}.bc.nightly", krate.dir(), bin_name)).exists())
+                    || Path::new(&format!("{}/{}.bc.nightly", krate.dir(), bin_name)).exists()
+                    || Path::new(&format!("{}/{}.bc.std_rewrite", krate.dir(), bin_name)).exists())
                 {
                     let output = Command::new("rustup")
-                        .args(&["run", "1.22.1"])
-                        //  .args(&["run", "nightly-2017-12-06-x86_64-unknown-linux-gnu"])
+                        //.args(&["run", "1.22.1"])
+                        .args(&["run", "nightly-2017-12-06-x86_64-unknown-linux-gnu"])
                         .args(&["cargo", "rustc", "--bin"])
                         .arg(bin_name)
                         .args(&["--", "--emit=llvm-bc"])
@@ -326,7 +327,7 @@ impl Registry {
                         if krate.has_bitcode() {
                             fs::rename(
                                 krate.bitcode_path(),
-                                format!("{}/{}.bc.std_rewrite", krate.dir(), bin_name),
+                                format!("{}/{}.bc.nightly_rewrite", krate.dir(), bin_name),
                             ).expect(&format!(
                                 "{}/{}-{}: unable to rename",
                                 krate.name, krate.version, bin_name
